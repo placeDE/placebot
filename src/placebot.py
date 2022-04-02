@@ -65,9 +65,7 @@ def run_board_watcher_placer(placers):
                 was_completed = True
             continue
 
-            print(
-                f"Mismatched pixel found ({count}/{(str(len(placer.board.target_configuration.get_pixels())))}): {str(targetPixel)}")
-        print(f"Mismatched pixel found ({count}/{(str(len(placer.board.target_configuration.get_pixels())))}): {str(target_pixel)}")
+                print(f"Mismatched pixel found ({count}/{(str(len(placer.board.target_configuration.get_pixels())))}): {str(target_pixel)}")
             placer.place_tile(target_pixel["x"], target_pixel["y"], get_color_from_index(target_pixel["color_index"]))
 
             time.sleep(5)
@@ -84,6 +82,7 @@ def run_board_watcher_placer(placers):
 
         time.sleep(30)
 
+    time.sleep(5)
 # Run the entire thing
 def run_bot():
     placers = login_all()
