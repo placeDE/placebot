@@ -33,6 +33,7 @@ Bot for the r/place event.
 Based on code from https://github.com/goatgoose/PlaceBot and https://github.com/rdeepak2002/reddit-place-script-2022.
 
 ## Functionality
+- does NOT use the reddit API
 - Convert input image to be drawn to target configuration, ignores transparent pixels
 - Supports multiple accounts
 - Supports obtaining the target configuration from a server (or local file) to prevent outdated templates
@@ -168,7 +169,7 @@ The bot goes to sleep when it detects that there are only a few pixels left to b
 ### Generate configuration
 To paint an image you need a template in the form of a PNG. 
 ```
-python3 src/converter/image_converter.py [filename] [x] [y]
+python3 src/image_converter.py [filename] [x] [y]
 ```
 The position specified is that of the top left pixel.
 The generated file contains the coordinates and closest available place color for each pixel of the input image that hadn't set alpha to 0.
