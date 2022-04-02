@@ -19,3 +19,20 @@ The script in converter can be used to convert an image to a target configuratio
 
 The bot (run via placebot.py) can be configured using config.json. It logs into multiple accounts and pulls the target config from a server via http every 60 seconds.
 Every 5 minutes (+5-25 secs), each account pulls the board and attempts to place a misplaced pixel.
+
+
+## Docker-Compose
+
+```yml
+version: '2'
+services:
+  placebot:
+    build: https://github.com/TheCataliasTNT2k/placebot.git#main
+    restart: unless-stopped
+    volumes:
+     - ./config.json:/app/config.json
+```
+1. Add above as docker-compose.yml
+2. Add `config.json` to the same folder
+3. Run `docker-compose up -d
+4. Profit.
