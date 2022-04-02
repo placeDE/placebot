@@ -175,7 +175,6 @@ class Placer:
     Uses the returned URL to request the actual image using HTTP
     :param canvas_id: the canvas to fetch
     """
-
     def update_canvas(self, canvas_id):
         print("Getting board")
         ws = create_connection("wss://gql-realtime-2.reddit.com/query")
