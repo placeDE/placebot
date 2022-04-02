@@ -7,8 +7,8 @@ RUN pip install pipenv
 ADD ./Pipfile /app/
 ADD ./Pipfile.lock /app/
 
-RUN pipenv sync
+RUN pipenv install --system --deploy --ignore-pipfile
 
 ADD . /app/
 
-CMD ["python", "src/placebot.py"]
+CMD ["python","-u", "src/placebot.py"]
