@@ -256,3 +256,4 @@ class Placer:
                     break
 
         ws.close()
+
