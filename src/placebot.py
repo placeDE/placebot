@@ -62,7 +62,8 @@ def run_board_watcher_placer(placers):
             if target_pixel is None:
                 print("No mismatched pixels found")
                 was_completed = True
-                continue
+                wasCompleted = True
+            continue
 
             print(
                 f"Mismatched pixel found ({count}/{(str(len(placer.board.target_configuration.get_pixels())))}): {str(target_pixel)}")
@@ -98,36 +99,9 @@ while True:
         time.sleep(10)  # wait a bit in case the server lost connection
 
 
+    if wasCompleted and lastMismatchCount < SLEEP_MISMATCH_THRESHOLD:
+        print("Less than " + str(SLEEP_MISMATCH_THRESHOLD) + " mismatched pixels found, going to sleep, good night")
+        time.sleep(90)
+
     time.sleep(30)
-
-
-
-
-
-# Traceback (most recent call last):
-# File "src/placebot.py", line 52, in <module>
-# placer.update_board()
-# File "/home/place/place/src/placer.py", line 162, in update_board
-# self.update_canvas(1)
-# File "/home/place/place/src/placer.py", line 223, in update_canvas
-# temp = json.loads(ws.recv())
-# File "/home/place/place/.venv/lib/python3.8/site-packages/websocket/_core.py", line 357, in recv
-# opcode, data = self.recv_data()
-# File "/home/place/place/.venv/lib/python3.8/site-packages/websocket/_core.py", line 380, in recv_data
-# opcode, frame = self.recv_data_frame(control_frame)
-# File "/home/place/place/.venv/lib/python3.8/site-packages/websocket/_core.py", line 401, in recv_data_frame
-# frame = self.recv_frame()
-# File "/home/place/place/.venv/lib/python3.8/site-packages/websocket/_core.py", line 440, in recv_frame
-# return self.frame_buffer.recv_frame()
-# File "/home/place/place/.venv/lib/python3.8/site-packages/websocket/_abnf.py", line 338, in recv_frame
-# self.recv_header()
-# File "/home/place/place/.venv/lib/python3.8/site-packages/websocket/_abnf.py", line 294, in recv_header
-# header = self.recv_strict(2)
-# File "/home/place/place/.venv/lib/python3.8/site-packages/websocket/_abnf.py", line 373, in recv_strict
-# bytes_ = self.recv(min(16384, shortage))
-# File "/home/place/place/.venv/lib/python3.8/site-packages/websocket/_core.py", line 524, in _recv
-# return recv(self.sock, bufsize)
-# File "/home/place/place/.venv/lib/python3.8/site-packages/websocket/_socket.py", line 122, in recv
-# raise WebSocketConnectionClosedException(
-#     websocket._exceptions.WebSocketConnectionClosedException: Connection to remote host was lost.
 
