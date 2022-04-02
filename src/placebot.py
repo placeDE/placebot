@@ -10,6 +10,7 @@ from placer import Placer
 from target_configuration.target_configuration_de import TargetConfigurationDE
 
 PLACE_INTERVAL = 5 * 60
+SLEEP_MISMATCH_THRESHOLD = 5
 
 target_config = TargetConfigurationDE()
 board = BoardDE(target_config)
@@ -28,6 +29,8 @@ for account in local_configuration["accounts"]:
 print("\n", len(placers), " accounts logged in\n")
 
 counter = 0
+lastMismatchCount = 1000 * 1000
+wasCompleted = False
 
 while True:
     for placer in placers:
@@ -49,6 +52,7 @@ while True:
 
         if targetPixel is None:
             print("No mismatched pixels found")
+            wasCompleted = True
             continue
 
         print(
@@ -60,5 +64,9 @@ while True:
     print("ETA:   ", ",  ".join(
             [p.username + " - " + str(round(p.last_placed + PLACE_INTERVAL + 15 - time.time())) + " s" for p in
              placers]))
+
+    if wasCompleted and lastMismatchCount < SLEEP_MISMATCH_THRESHOLD:
+        print("Less than " + str(SLEEP_MISMATCH_THRESHOLD) + " mismatched pixels found, going to sleep, good night")
+        time.sleep(90)
 
     time.sleep(30)
