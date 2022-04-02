@@ -7,6 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 from websocket import create_connection
 
+from boards.board_base import BoardBase
 from color import Color
 
 # based on https://github.com/goatgoose/PlaceBot and https://github.com/rdeepak2002/reddit-place-script-2022/blob/073c13f6b303f89b4f961cdbcbd008d0b4437b39/main.py#L316
@@ -167,7 +168,6 @@ class Placer:
             for canvas_id in [0, 1]:
                 self.update_canvas(canvas_id)
 
-
     def update_canvas(self, canvas_id):
         print("Getting board")
         ws = create_connection("wss://gql-realtime-2.reddit.com/query")
@@ -240,5 +240,7 @@ class Placer:
                     break
 
         ws.close()
+
+
 
 
