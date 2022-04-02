@@ -4,17 +4,25 @@ from PIL import ImageColor
 
 
 class Color(Enum):
+    DARK_RED = {"id": 1, "hex": "#BE0039"}
     RED = {"id": 2, "hex": "#FF4500"}
     ORANGE = {"id": 3, "hex": "#FFA800"}
     YELLOW = {"id": 4, "hex": "#FFD635"}
     DARK_GREEN = {"id": 6, "hex": "#00A368"}
+    GREEN = {"id": 7, "hex": "#00CC78"}
     LIGHT_GREEN = {"id": 8, "hex": "#7EED56"}
+    DARK_TEAL = {"id": 9, "hex": "#00756F"}
+    TEAL = {"id": 9, "hex": "#009EAA"}
     DARK_BLUE = {"id": 12, "hex": "#2450A4"}
     BLUE = {"id": 13, "hex": "#3690EA"}
     CYAN = {"id": 14, "hex": "#51E9F4"}
+    INDIGO = {"id": 15, "hex": "#493AC1"}
+    PERIWINKLE = {"id": 16, "hex": "#6A5CFF"}
     DARK_PURPLE = {"id": 18, "hex": "#811E9F"}
     PURPLE = {"id": 19, "hex": "#B44AC0"}
-    PINK = {"id": 23, "hex": "#FF99AA"}
+    PINK = {"id": 22, "hex": "#FF3881"}
+    LIGHT_PINK = {"id": 23, "hex": "#FF99AA"}
+    DARK_BROWN = {"id": 24, "hex": "#6D482F"}
     BROWN = {"id": 25, "hex": "#9C6926"}
     BLACK = {"id": 27, "hex": "#000000"}
     GREY = {"id": 29, "hex": "#898D90"}
