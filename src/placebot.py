@@ -70,8 +70,7 @@ def run_board_watcher_placer(placers):
 
             time.sleep(5)
 
-        # Be nice and verbose so users don't look at nothing for 5 minutes
-        print("ETA:   ", ",  ".join(
+    print("ETA:   ", ",  ".join(
             [p.username + " - " + str(round(p.last_placed + PLACE_INTERVAL + 15 - time.time())) + " s" for p in
              placers]))
 
@@ -99,7 +98,7 @@ while True:
         time.sleep(10)  # wait a bit in case the server lost connection
 
 
-    time.sleep(5)
+    time.sleep(30)
 
 
 
@@ -131,3 +130,4 @@ while True:
 # File "/home/place/place/.venv/lib/python3.8/site-packages/websocket/_socket.py", line 122, in recv
 # raise WebSocketConnectionClosedException(
 #     websocket._exceptions.WebSocketConnectionClosedException: Connection to remote host was lost.
+
