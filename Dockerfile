@@ -11,4 +11,4 @@ RUN pipenv install --system --deploy --ignore-pipfile
 
 ADD . /app/
 
-CMD ["python", "src/placebot.py"]
+CMD ["python","-u", "src/placebot.py"]
