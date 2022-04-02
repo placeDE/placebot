@@ -94,7 +94,7 @@ class Placer:
         time.sleep(1)
 
         if r.status_code != 200:
-            print("Authorization failed!")
+            print("Authorization failed!")  # password is probably invalid
             return
         else:
             print("Authorization successful!")
@@ -111,9 +111,8 @@ class Placer:
         self.logged_in = True
 
     def place_tile(self, x: int, y: int, color: Color):
-
-        canvas_id = math.floor(x / 1000)
-        x = x % 1000
+        canvas_id = math.floor(x / 1000)  # obtain the canvas id, each canvas is 1000x1000, there are currently 2 stacked next to each other
+        x = x % 1000  # we need to send relative to the canvas
 
         self.last_placed = time.time()
 
@@ -155,18 +154,27 @@ class Placer:
         if r.status_code != 200:
             print("Error placing tile")
             print(r.content)
+            # TODO: handle error
         else:
             print("Placed tile")
 
+
+    """
+    Fetch the current state of the board/canvas for the requed areas
+    """
     def update_board(self):
-        if "canvases_enabled" in self.board.target_configuration.get_config():
+        if "canvases_enabled" in self.board.target_configuration.get_config():  # the configuration can disable some canvases to reduce load
             for canvas_id in self.board.target_configuration.get_config()["canvases_enabled"]:
                 self.update_canvas(canvas_id)
-        else:
+        else:  # by default, use all (2 at the moment)
             for canvas_id in [0, 1]:
                 self.update_canvas(canvas_id)
 
-
+    """
+    Connects a websocket and sends a request to the server for the current state of the board
+    Uses the returned URL to request the actual image using HTTP
+    :param canvas_id: the canvas to fetch
+    """
     def update_canvas(self, canvas_id):
         print("Getting board")
         ws = create_connection("wss://gql-realtime-2.reddit.com/query")
@@ -224,16 +232,18 @@ class Placer:
             )
         )
 
-        file = ""
+        filename = ""
         while True:
             temp = json.loads(ws.recv())
             if temp["type"] == "data":
                 msg = temp["payload"]["data"]["subscribe"]
                 if msg["data"]["__typename"] == "FullFrameMessageData":
-                    file = msg["data"]["name"]
+                    filename = msg["data"]["name"]
 
-                    print("Got image for canvas " + str(canvas_id) + ": " + file)
-                    img = BytesIO(requests.get(file, stream=True).content)
+                    print("Got image for canvas " + str(canvas_id) + ": " + filename)
+                    img = BytesIO(requests.get(filename, stream=True).content)
+
+                    # Tell the board to update with the offset of the current canvas
                     self.board.update_image(img, 1000 * canvas_id, 0)
 
                     break

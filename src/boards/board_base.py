@@ -12,9 +12,10 @@ BOARD_SIZE_Y = 1000
 class BoardBase:
     def __init__(self, target_configuration: TargetConfigurationBase):
         self.last_update = 0
-        self.colors = []
+        self.colors = []  # 2D array of the entire board (BOARD_SIZE_X x BOARD_SIZE_Y), Color objects
         self.target_configuration: TargetConfigurationBase = target_configuration
 
+        # Fill with white preset
         for x in range(BOARD_SIZE_X):
             column = []
             for y in range(BOARD_SIZE_Y):
@@ -58,4 +59,5 @@ class BoardBase:
             if currentColor is None or currentColor.value["id"] != target_pixel["color_index"]:
                 mismatched_pixels.append(target_pixel)
         return mismatched_pixels
+
 

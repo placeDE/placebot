@@ -32,6 +32,9 @@ for color in Color:
     color.value["rgb"] = ImageColor.getcolor(color.value["hex"], "RGB")
 
 
+"""
+Returns the color object based on the given rgb tuple
+"""
 def get_matching_color(rgb) -> Color:
     for color in Color:
         if color.value["rgb"] == rgb:
@@ -40,7 +43,9 @@ def get_matching_color(rgb) -> Color:
     print("Color not found:", rgb)
     return None
 
-
+"""
+Returns the color object based on a given place color index
+"""
 def get_color_from_index(index) -> Color:
     for color in Color:
         if color.value["id"] == index:
@@ -48,7 +53,9 @@ def get_color_from_index(index) -> Color:
     return None
 
 
-# def get_closest_color(r, g, b) -> Color: # This function was written in its entirety by GPT3, WTF
+# Where has AI gotten us?
+# This function was written in its entirety by GPT3, WTF
+# def get_closest_color(r, g, b) -> Color:
 #     min_distance = None
 #     closest_color = None
 #     for color in Color:
@@ -58,6 +65,9 @@ def get_color_from_index(index) -> Color:
 #             closest_color = color
 #     return closest_color
 
+"""
+Get the closest color available on place to any color for converting any image to a template
+"""
 def get_closest_color(r, g, b) -> Color:
     return min(list(Color), key=lambda color: (r - color.value["rgb"][0]) ** 2 + (g - color.value["rgb"][1]) ** 2 + (
                 b - color.value["rgb"][2]) ** 2)

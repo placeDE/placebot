@@ -2,6 +2,7 @@ import json
 from os import environ
 from sys import argv
 
+# Do I look like I know python? :)
 local_configuration = {}
 
 if (path := environ.get("CONFIGURATION_FILE")) is None:

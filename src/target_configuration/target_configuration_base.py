@@ -8,12 +8,19 @@ from local_configuration import local_configuration
 UPDATE_INTERVAL = 60
 
 
+"""
+Represents the target configuration containing the template / pixels to be drawn
+Is refreshed periodically by pulling it from a server 
+"""
 class TargetConfigurationBase:
     def __init__(self):
         self.last_update = 0
         self.config = {}
         self.pixels: list[dict] = []
 
+    """
+    Get the config and refresh it first if necessary
+    """
     def get_config(self):
         if self.last_update + UPDATE_INTERVAL < time.time():
             self.refresh_config()
@@ -23,6 +30,9 @@ class TargetConfigurationBase:
 
         return self.config
 
+    """
+    Pulls the config from the server configured in config.json or falls back to reading a local file if specified as such
+    """
     def refresh_config(self):
         print("\nRefreshing target configuration...\n")
 

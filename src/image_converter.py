@@ -27,6 +27,7 @@ transparent_pixels = 0
 
 print("Image size: " + str(image.size))
 
+# Prioritization of pixels is determined by order added
 for y in range(image.height):
     for x in range(image.width):
         rgba = image_data[x, y]
