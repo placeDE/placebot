@@ -1,10 +1,4 @@
 import json
-import json
-from io import BytesIO
-from typing import Type
-from websocket import create_connection
-from boards.board_base import BoardBase
-from boards.board_de import BoardDE
 import math
 import time
 from io import BytesIO
@@ -14,7 +8,7 @@ from bs4 import BeautifulSoup
 from websocket import create_connection
 
 from color import Color
-from target_configuration.target_configuration_base import TargetConfigurationBase
+
 # based on https://github.com/goatgoose/PlaceBot and https://github.com/rdeepak2002/reddit-place-script-2022/blob/073c13f6b303f89b4f961cdbcbd008d0b4437b39/main.py#L316
 
 
@@ -164,8 +158,8 @@ class Placer:
             print("Placed tile")
 
     def update_board(self):
-        # self.update_canvas(0)
-        self.update_canvas(1)
+        for canvas_id in self.board.target_configuration.get_config()["canvases_enabled"]:
+            self.update_canvas(canvas_id)
 
     def update_canvas(self, canvas_id):
         print("Getting board")
@@ -232,15 +226,11 @@ class Placer:
                 if msg["data"]["__typename"] == "FullFrameMessageData":
                     file = msg["data"]["name"]
 
-                    if canvas_id == 0:
-                        boardimg = BytesIO(requests.get(file, stream=True).content)
-                        print("Got first image, canvas ", canvas_id, ":", file)
-                        self.board.update_image(boardimg, 0, 0)
-                    elif canvas_id == 1:
-                        boardimg = BytesIO(requests.get(file, stream=True).content)
-                        print("Got second image, canvas ", canvas_id, ":", file)
-                        self.board.update_image(boardimg, 1000, 0)
+                    print("Got image for canvas " + str(canvas_id) + ": " + file)
+                    img = BytesIO(requests.get(file, stream=True).content)
+                    self.board.update_image(img, 1000 * canvas_id, 0)
 
                     break
 
         ws.close()
+
