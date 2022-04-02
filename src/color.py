@@ -14,6 +14,10 @@ class Color(Enum):
     DARK_BLUE = {"id": 12, "hex": "#2450A4"}
     BLUE = {"id": 13, "hex": "#3690EA"}
     CYAN = {"id": 14, "hex": "#51E9F4"}
+    INDIGO = {"id": 15, "hex": "#493AC1"}
+    PERIWINKLE = {"id": 16, "hex": "#6A5CFF"}
+    TURQUOISE = {"id": 15, "hex": "#493AC1"}
+    BLUEISH_PURPLE = {"id": 16, "hex": "#6A5CFF"}
     DARK_PURPLE = {"id": 18, "hex": "#811E9F"}
     PURPLE = {"id": 19, "hex": "#B44AC0"}
     DARK_PINK = {"id": 22, "hex": "#FF3881"}
