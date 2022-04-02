@@ -12,6 +12,8 @@ from target_configuration.target_configuration_de import TargetConfigurationDE
 PLACE_INTERVAL = 5 * 60  #  The interval that pixels can be placed at
 SLEEP_MISMATCH_THRESHOLD = 0.02  # The percentage of pixels mismatching that cause the bot to slow down (not stop) its refresh rate
 
+target_config = TargetConfigurationDE()
+board = BoardDE(target_config)
 
 """
 Logs into all accounts in the local configuration file
@@ -64,7 +66,8 @@ def run_board_watcher_placer(placers):
             continue
 
             print(
-                f"Mismatched pixel found ({count}/{(str(len(placer.board.target_configuration.get_pixels())))}): {str(target_pixel)}")
+                f"Mismatched pixel found ({count}/{(str(len(placer.board.target_configuration.get_pixels())))}): {str(targetPixel)}")
+        print(f"Mismatched pixel found ({count}/{(str(len(placer.board.target_configuration.get_pixels())))}): {str(target_pixel)}")
             placer.place_tile(target_pixel["x"], target_pixel["y"], get_color_from_index(target_pixel["color_index"]))
 
             time.sleep(5)
