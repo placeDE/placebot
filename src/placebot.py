@@ -66,7 +66,7 @@ while True:
              placers]))
 
     if wasCompleted and lastMismatchCount < SLEEP_MISMATCH_THRESHOLD:
-        print("Less than " + str(SLEEP_MISMATCH_THRESHOLD) + " mismatched pixels found, going to sleep, good night")
+        print("\nLess than " + str(SLEEP_MISMATCH_THRESHOLD) + " mismatched pixels found, going to sleep, good night")
         time.sleep(90)
 
     time.sleep(30)
