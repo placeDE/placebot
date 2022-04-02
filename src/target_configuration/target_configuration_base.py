@@ -7,15 +7,19 @@ from local_configuration import local_configuration
 
 UPDATE_INTERVAL = 60
 
-class TargetConfiguration:
+
+class TargetConfigurationBase:
     def __init__(self):
         self.last_update = 0
         self.config = {}
+        self.pixels: list[dict] = []
 
     def get_config(self):
         if self.last_update + UPDATE_INTERVAL < time.time():
             self.refresh_config()
             self.last_update = time.time()
+
+        self.pixels = self.config["pixels"]
 
         return self.config
 
@@ -30,4 +34,9 @@ class TargetConfiguration:
         # parse config file
         self.config = json.loads(r.text)
 
-target_configuration = TargetConfiguration()
+    def get_pixels(self) -> list[dict]:
+        self.get_config()
+        return self.pixels
+
+
+target_configuration = TargetConfigurationBase()

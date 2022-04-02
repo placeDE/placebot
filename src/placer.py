@@ -1,18 +1,22 @@
-import math
-import sys
-from enum import Enum
-import time
 import json
-
-import requests
+import json
+from io import BytesIO
+from typing import Type
 from websocket import create_connection
-from bs4 import BeautifulSoup
+from boards.board_base import BoardBase
+from boards.board_de import BoardDE
+import math
+import time
 from io import BytesIO
 
-from board import Board
-from color import Color
+import requests
+from bs4 import BeautifulSoup
+from websocket import create_connection
 
+from color import Color
+from target_configuration.target_configuration_base import TargetConfigurationBase
 # based on https://github.com/goatgoose/PlaceBot and https://github.com/rdeepak2002/reddit-place-script-2022/blob/073c13f6b303f89b4f961cdbcbd008d0b4437b39/main.py#L316
+
 
 SET_PIXEL_QUERY = \
     """mutation setPixel($input: ActInput!) {
@@ -59,14 +63,14 @@ class Placer:
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36"
     }
 
-    def __init__(self):
+    def __init__(self, board: BoardBase):
         self.client = requests.session()
         self.client.headers.update(self.INITIAL_HEADERS)
 
         self.token = None
         self.logged_in = False
-        self.board = Board()
         self.last_placed = 0
+        self.board = board
 
         self.username = "Unknown"
 
@@ -103,7 +107,8 @@ class Placer:
         # get the new access token
         print("Obtaining access token...")
         r = self.client.get(self.REDDIT_URL)
-        data_str = BeautifulSoup(r.content, features="html.parser").find("script", {"id": "data"}).contents[0][len("window.__r = "):-1]
+        data_str = BeautifulSoup(r.content, features="html.parser").find("script", {"id": "data"}).contents[0][
+                   len("window.__r = "):-1]
         data = json.loads(data_str)
         self.token = data["user"]["session"]["accessToken"]
 
@@ -128,7 +133,8 @@ class Placer:
             "authorization": "Bearer " + self.token
         })
 
-        print("Placing tile at " + str(x) + ", " + str(y) + " with color " + str(color) + " on canvas " + str(canvas_id))
+        print(
+            "Placing tile at " + str(x) + ", " + str(y) + " with color " + str(color) + " on canvas " + str(canvas_id))
         r = requests.post(
             "https://gql-realtime-2.reddit.com/query",
             json={

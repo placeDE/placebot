@@ -1,5 +1,7 @@
 from enum import Enum
+
 from PIL import ImageColor
+
 
 class Color(Enum):
     RED = {"id": 2, "hex": "#FF4500"}
@@ -19,9 +21,11 @@ class Color(Enum):
     LIGHT_GREY = {"id": 30, "hex": "#D4D7D9"}
     WHITE = {"id": 31, "hex": "#FFFFFF"}
 
+
 # generate rgb values for all colors
 for color in Color:
     color.value["rgb"] = ImageColor.getcolor(color.value["hex"], "RGB")
+
 
 def get_matching_color(rgb) -> Color:
     for color in Color:
@@ -29,11 +33,13 @@ def get_matching_color(rgb) -> Color:
             return color
     return None
 
+
 def get_color_from_index(index) -> Color:
     for color in Color:
         if color.value["id"] == index:
             return color
     return None
+
 
 # def get_closest_color(r, g, b) -> Color: # This function was written in its entirety by GPT3, WTF
 #     min_distance = None
@@ -46,4 +52,5 @@ def get_color_from_index(index) -> Color:
 #     return closest_color
 
 def get_closest_color(r, g, b) -> Color:
-    return min(list(Color), key=lambda color: (r - color.value["rgb"][0]) ** 2 + (g - color.value["rgb"][1]) ** 2 + (b - color.value["rgb"][2]) ** 2)
+    return min(list(Color), key=lambda color: (r - color.value["rgb"][0]) ** 2 + (g - color.value["rgb"][1]) ** 2 + (
+                b - color.value["rgb"][2]) ** 2)
