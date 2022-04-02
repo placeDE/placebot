@@ -9,7 +9,6 @@ from websocket import create_connection
 
 from boards.board_base import BoardBase
 from color import Color
-from target_configuration import target_configuration
 
 # based on https://github.com/goatgoose/PlaceBot and https://github.com/rdeepak2002/reddit-place-script-2022/blob/073c13f6b303f89b4f961cdbcbd008d0b4437b39/main.py#L316
 
@@ -166,6 +165,7 @@ class Placer:
         else:
             for canvas_id in [0, 1]:
                 self.update_canvas(canvas_id)
+
 
     def update_canvas(self, canvas_id):
         print("Getting board")
