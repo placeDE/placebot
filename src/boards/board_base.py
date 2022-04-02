@@ -12,6 +12,7 @@ BOARD_SIZE_Y = 1000
 class BoardBase:
     def __init__(self, target_configuration: TargetConfigurationBase):
         self.last_update = 0
+        self.target_configuration: TargetConfigurationBase = target_configuration
         self.colors = []  # 2D array of the entire board (BOARD_SIZE_X x BOARD_SIZE_Y), Color objects
         self.target_configuration: TargetConfigurationBase = target_configuration
 

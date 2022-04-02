@@ -98,3 +98,5 @@ while True:
         print("\nRestarting...\n")
         time.sleep(10)  # wait a bit in case the server lost connection
 
+
+    time.sleep(5)

@@ -32,6 +32,7 @@ for color in Color:
     color.value["rgb"] = ImageColor.getcolor(color.value["hex"], "RGB")
 
 
+
 """
 Returns the color object based on the given rgb tuple
 """
@@ -42,6 +43,7 @@ def get_matching_color(rgb) -> Color:
 
     print("Color not found:", rgb)
     return None
+
 
 """
 Returns the color object based on a given place color index
