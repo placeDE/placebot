@@ -160,6 +160,13 @@ class Placer:
     def update_board(self):
         for canvas_id in self.board.target_configuration.get_config()["canvases_enabled"]:
             self.update_canvas(canvas_id)
+        if "canvases_enabled" in self.board.target_configuration.get_config():
+            for canvas_id in self.board.target_configuration.get_config()["canvases_enabled"]:
+                self.update_canvas(canvas_id)
+        else:
+            for canvas_id in [0, 1]:
+                self.update_canvas(canvas_id)
+
 
     def update_canvas(self, canvas_id):
         print("Getting board")
@@ -233,4 +240,5 @@ class Placer:
                     break
 
         ws.close()
+
 
