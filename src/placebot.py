@@ -12,9 +12,6 @@ from local_configuration import local_configuration
 from placer import Placer
 from target_configuration.target_configuration_de import TargetConfigurationDE
 
-from target_configuration import target_configuration
-from color import get_color_from_index, Color
-
 #### TESTING ####
 # def testing():
 #     placer = Placer()
