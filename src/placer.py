@@ -191,82 +191,85 @@ class Placer:
 
     def update_canvas(self, canvas_id):
         print("Getting board")
-        ws = create_connection("wss://gql-realtime-2.reddit.com/query")
-        ws.send(
-            json.dumps(
-                {
-                    "type": "connection_init",
-                    "payload": {"Authorization": "Bearer " + self.token},
-                }
+        try:
+            ws = create_connection("wss://gql-realtime-2.reddit.com/query")
+            ws.send(
+                json.dumps(
+                    {
+                        "type": "connection_init",
+                        "payload": {"Authorization": "Bearer " + self.token},
+                    }
+                )
             )
-        )
-        ws.recv()
-        ws.send(
-            json.dumps(
-                {
-                    "id": "1",
-                    "type": "start",
-                    "payload": {
-                        "variables": {
-                            "input": {
-                                "channel": {
-                                    "teamOwner": "AFD2022",
-                                    "category": "CONFIG",
+            ws.recv()
+            ws.send(
+                json.dumps(
+                    {
+                        "id": "1",
+                        "type": "start",
+                        "payload": {
+                            "variables": {
+                                "input": {
+                                    "channel": {
+                                        "teamOwner": "AFD2022",
+                                        "category": "CONFIG",
+                                    }
                                 }
-                            }
+                            },
+                            "extensions": {},
+                            "operationName": "configuration",
+                            "query": "subscription configuration($input: SubscribeInput!) {\n  subscribe(input: $input) {\n    id\n    ... on BasicMessage {\n      data {\n        __typename\n        ... on ConfigurationMessageData {\n          colorPalette {\n            colors {\n              hex\n              index\n              __typename\n            }\n            __typename\n          }\n          canvasConfigurations {\n            index\n            dx\n            dy\n            __typename\n          }\n          canvasWidth\n          canvasHeight\n          __typename\n        }\n      }\n      __typename\n    }\n    __typename\n  }\n}\n",
                         },
-                        "extensions": {},
-                        "operationName": "configuration",
-                        "query": "subscription configuration($input: SubscribeInput!) {\n  subscribe(input: $input) {\n    id\n    ... on BasicMessage {\n      data {\n        __typename\n        ... on ConfigurationMessageData {\n          colorPalette {\n            colors {\n              hex\n              index\n              __typename\n            }\n            __typename\n          }\n          canvasConfigurations {\n            index\n            dx\n            dy\n            __typename\n          }\n          canvasWidth\n          canvasHeight\n          __typename\n        }\n      }\n      __typename\n    }\n    __typename\n  }\n}\n",
-                    },
-                }
+                    }
+                )
             )
-        )
-        ws.recv()
-        ws.send(
-            json.dumps(
-                {
-                    "id": "2",
-                    "type": "start",
-                    "payload": {
-                        "variables": {
-                            "input": {
-                                "channel": {
-                                    "teamOwner": "AFD2022",
-                                    "category": "CANVAS",
-                                    "tag": str(canvas_id),
+            ws.recv()
+            ws.send(
+                json.dumps(
+                    {
+                        "id": "2",
+                        "type": "start",
+                        "payload": {
+                            "variables": {
+                                "input": {
+                                    "channel": {
+                                        "teamOwner": "AFD2022",
+                                        "category": "CANVAS",
+                                        "tag": str(canvas_id),
+                                    }
                                 }
-                            }
+                            },
+                            "extensions": {},
+                            "operationName": "replace",
+                            "query": "subscription replace($input: SubscribeInput!) {\n  subscribe(input: $input) {\n    id\n    ... on BasicMessage {\n      data {\n        __typename\n        ... on FullFrameMessageData {\n          __typename\n          name\n          timestamp\n        }\n        ... on DiffFrameMessageData {\n          __typename\n          name\n          currentTimestamp\n          previousTimestamp\n        }\n      }\n      __typename\n    }\n    __typename\n  }\n}\n",
                         },
-                        "extensions": {},
-                        "operationName": "replace",
-                        "query": "subscription replace($input: SubscribeInput!) {\n  subscribe(input: $input) {\n    id\n    ... on BasicMessage {\n      data {\n        __typename\n        ... on FullFrameMessageData {\n          __typename\n          name\n          timestamp\n        }\n        ... on DiffFrameMessageData {\n          __typename\n          name\n          currentTimestamp\n          previousTimestamp\n        }\n      }\n      __typename\n    }\n    __typename\n  }\n}\n",
-                    },
-                }
+                    }
+                )
             )
-        )
 
-        filename = ""
-        while True:
-            temp = json.loads(ws.recv())
-            if temp["type"] == "data":
-                msg = temp["payload"]["data"]["subscribe"]
-                if msg["data"]["__typename"] == "FullFrameMessageData":
-                    filename = msg["data"]["name"]
+            filename = ""
+            while True:
+                temp = json.loads(ws.recv())
+                if temp["type"] == "data":
+                    msg = temp["payload"]["data"]["subscribe"]
+                    if msg["data"]["__typename"] == "FullFrameMessageData":
+                        filename = msg["data"]["name"]
 
-                    print("Got image for canvas " + str(canvas_id) + ": " + filename)
-                    img = BytesIO(requests.get(filename, stream=True).content)
+                        print("Got image for canvas " + str(canvas_id) + ": " + filename)
+                        img = BytesIO(requests.get(filename, stream=True).content)
 
-                    # Tell the board to update with the offset of the current canvas
-                    if canvas_id == 0:
-                        self.board.update_image(img, 0, 0)
-                    if canvas_id == 1:
-                        self.board.update_image(img, 1000, 0)
-                    if canvas_id == 2:
-                        self.board.update_image(img, 0, 1000)
-                    if canvas_id == 3:
-                        self.board.update_image(img, 1000, 1000)
+                        # Tell the board to update with the offset of the current canvas
+                        if canvas_id == 0:
+                            self.board.update_image(img, 0, 0)
+                        if canvas_id == 1:
+                            self.board.update_image(img, 1000, 0)
+                        if canvas_id == 2:
+                            self.board.update_image(img, 0, 1000)
+                        if canvas_id == 3:
+                            self.board.update_image(img, 1000, 1000)
 
-                    break
+                        break
 
-        ws.close()
+            ws.close()
+        except: # reddit may close the connection
+            pass
