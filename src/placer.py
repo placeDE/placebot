@@ -129,7 +129,7 @@ class Placer:
         })
 
         print(
-            "Placing tile at " + str(x) + ", " + str(y) + " with color " + str(color) + " on canvas " + str(canvas_id))
+            "Placing tile at " + str(x) + ", " + str(y + (canvas_id * 1000)) + " with color " + str(color) + " on canvas " + str(canvas_id))
         r = requests.post(
             "https://gql-realtime-2.reddit.com/query",
             json={
