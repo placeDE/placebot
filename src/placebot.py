@@ -41,14 +41,14 @@ Periodically pulls the board and places a tile when required
 """
 def run_board_watcher_placer(placers):
     # Tracks if the template was completed and how many mismatches there were, if yes and below threshold, goes to sleep
-    total_pixel_count = 1000 * 1000
-    last_mismatch_count = 1000 * 1000
-    was_completed = False
+    #total_pixel_count = 1000 * 1000
+    #last_mismatch_count = 1000 * 1000
+    #was_completed = False
 
     while True:
         for placer in placers:
-            if placer.last_placed + PLACE_INTERVAL + random.randrange(5,
-                                                                      25) > time.time():  # Triggered every PLACE_INTERVAL seconds, + random offset (5-25 seconds)
+            if placer.last_placed + PLACE_INTERVAL + random.randrange(5, 25) > time.time():
+                # Triggered every PLACE_INTERVAL seconds, + random offset (5-25 seconds)
                 continue
 
             print("Attempting to place for: " + placer.username)
@@ -69,7 +69,7 @@ def run_board_watcher_placer(placers):
                 was_completed = True
                 continue
 
-            print("Mismatched pixel found (" + (str(last_mismatch_count)) + "/" + (
+            print("Mismatched pixel found (" + (str(count)) + "/" + (
                 str(len(board.target_configuration.get_pixels()))) + "): " + str(target_pixel))
 
             # Place mismatched target pixel with correct color
@@ -79,15 +79,15 @@ def run_board_watcher_placer(placers):
             time.sleep(5)
 
         # Be nice and verbose so users don't look at nothing for 5 minutes
-        print("ETA:   ", ",  ".join(
-            [p.username + " - " + str(round(p.last_placed + PLACE_INTERVAL + 15 - time.time())) + " s" for p in
-             placers]))
+        #print("ETA:   ", ",  ".join(
+        #    [p.username + " - " + str(round(p.last_placed + PLACE_INTERVAL + 15 - time.time())) + " s" for p in
+        #     placers]))
 
         # If we already completed the template and the mismatch is below threshold, it's time to go to sleep
-        if was_completed and last_mismatch_count < (SLEEP_MISMATCH_THRESHOLD * total_pixel_count):
-            print("\nLess than " + str(
-                SLEEP_MISMATCH_THRESHOLD * total_pixel_count) + " mismatched pixels found, going to sleep, good night")
-            time.sleep(90)
+        #if was_completed and last_mismatch_count < (SLEEP_MISMATCH_THRESHOLD * total_pixel_count):
+        #    print("\nLess than " + str(
+        #        SLEEP_MISMATCH_THRESHOLD * total_pixel_count) + " mismatched pixels found, going to sleep, good night")
+        #    time.sleep(90)
 
         time.sleep(30)
 

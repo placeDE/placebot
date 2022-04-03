@@ -59,6 +59,7 @@ class Placer:
     }
 
     def __init__(self, board: BoardBase):
+        self.password = None
         self.client = requests.session()
         self.client.headers.update(self.INITIAL_HEADERS)
 
@@ -109,6 +110,8 @@ class Placer:
 
         print("Logged in as " + username + "\n")
         self.logged_in = True
+        self.username = username
+        self.password = password
 
     def place_tile(self, x: int, y: int, color: Color):
         canvas_id = math.floor(
@@ -154,7 +157,11 @@ class Placer:
 
         if r.status_code != 200:
             print("Error placing tile")
-            print(r.content)
+            if "UNAUTHORIZED" in r.content.decode():
+                print("UNAUTHORIZED")
+                self.login(self.username, self.password)
+            else:
+                print(r.content)
             # TODO: handle error
         else:
             print("Placed tile")

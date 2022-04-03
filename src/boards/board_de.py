@@ -1,6 +1,7 @@
 import random
 
 from boards.board_base import BoardBase
+from color import get_color_from_index
 
 
 class BoardDE(BoardBase):
@@ -24,6 +25,6 @@ class BoardDE(BoardBase):
                 print("Couldn't determine color for pixel at " + str(target_pixel["x"]) + ", " + str(target_pixel["y"]))
                 continue
 
-            if currentColor is None or currentColor.value["id"] != target_pixel["color_index"]:
+            if currentColor is None or currentColor.value["id"] != target_pixel["color_index"] and get_color_from_index(target_pixel["color_index"]):
                 mismatched_pixels.append(target_pixel)
         return mismatched_pixels

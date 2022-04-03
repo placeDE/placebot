@@ -15,7 +15,7 @@ class TargetConfigurationBase:
     def __init__(self):
         self.last_update = 0
         self.config = {}
-        self.pixels: list[dict] = []
+        self.pixels = []
 
     """
     Get the config and refresh it first if necessary
@@ -51,7 +51,7 @@ class TargetConfigurationBase:
             with open(url, "r") as f:
                 self.config = json.load(f)
 
-    def get_pixels(self) -> list[dict]:
+    def get_pixels(self):
         self.get_config()
         return self.pixels
 
