@@ -180,7 +180,7 @@ class Placer:
             for canvas_id in self.board.target_configuration.get_config()["canvases_enabled"]:
                 self.update_canvas(canvas_id)
         else:  # by default, use all (2 at the moment)
-            for canvas_id in [0, 1]:
+            for canvas_id in [0, 1, 2, 3]:
                 self.update_canvas(canvas_id)
 
     """

@@ -74,7 +74,7 @@ def run_board_watcher_placer(placers):
 
             # Place mismatched target pixel with correct color
             placer.place_tile(target_pixel["x"], target_pixel["y"], get_color_from_index(target_pixel["color_index"]))
-            print("%d out of %d pixels under control, %d mismatches" % (total_pixel_count - last_mismatch_count, total_pixel_count, last_mismatch_count))
+            #print("%d out of %d pixels under control, %d mismatches" % (total_pixel_count - last_mismatch_count, total_pixel_count, last_mismatch_count))
 
             time.sleep(5)
 
@@ -82,12 +82,12 @@ def run_board_watcher_placer(placers):
         #print("ETA:   ", ",  ".join(
         #    [p.username + " - " + str(round(p.last_placed + PLACE_INTERVAL + 15 - time.time())) + " s" for p in
         #     placers]))
-
-        # If we already completed the template and the mismatch is below threshold, it's time to go to sleep
-        #if was_completed and last_mismatch_count < (SLEEP_MISMATCH_THRESHOLD * total_pixel_count):
-        #    print("\nLess than " + str(
-        #        SLEEP_MISMATCH_THRESHOLD * total_pixel_count) + " mismatched pixels found, going to sleep, good night")
-        #    time.sleep(90)
+#
+#        # If we already completed the template and the mismatch is below threshold, it's time to go to sleep
+#        if was_completed and last_mismatch_count < (SLEEP_MISMATCH_THRESHOLD * total_pixel_count):
+#            print("\nLess than " + str(
+#                SLEEP_MISMATCH_THRESHOLD * total_pixel_count) + " mismatched pixels found, going to sleep, good night")
+#            time.sleep(90)
 
         time.sleep(30)
 
