@@ -6,6 +6,7 @@ from websocket import create_connection
 from boards.board_base import BoardBase
 from boards.board_de import BoardDE
 import json
+import json
 import math
 import time
 from io import BytesIO
@@ -16,6 +17,7 @@ from websocket import create_connection
 
 from boards.board_base import BoardBase
 from color import Color
+from target_configuration import target_configuration
 
 # based on https://github.com/goatgoose/PlaceBot and https://github.com/rdeepak2002/reddit-place-script-2022/blob/073c13f6b303f89b4f961cdbcbd008d0b4437b39/main.py#L316
 
@@ -170,8 +172,8 @@ class Placer:
     Fetch the current state of the board/canvas for the requed areas
     """
     def update_board(self):
-        if "canvases_enabled" in self.board.target_configuration.get_config():  # the configuration can disable some canvases to reduce load
-            for canvas_id in self.board.target_configuration.get_config()["canvases_enabled"]:
+        if "canvases_enabled" in target_configuration.get_config():  # the configuration can disable some canvases to reduce load
+            for canvas_id in target_configuration.get_config()["canvases_enabled"]:
                 self.update_canvas(canvas_id)
         else:  # by default, use all (2 at the moment)
             for canvas_id in [0, 1]:

@@ -11,6 +11,8 @@ class Color(Enum):
     DARK_GREEN = {"id": 6, "hex": "#00A368"}
     GREEN = {"id": 7, "hex": "#00CC78"}
     LIGHT_GREEN = {"id": 8, "hex": "#7EED56"}
+    DARK_TEAL = {"id": 9, "hex": "#00756F"}
+    LIGHT_TEAL = {"id": 10, "hex": "#009EAA"}
     DARK_BLUE = {"id": 12, "hex": "#2450A4"}
     BLUE = {"id": 13, "hex": "#3690EA"}
     CYAN = {"id": 14, "hex": "#51E9F4"}
@@ -20,10 +22,15 @@ class Color(Enum):
     BLUEISH_PURPLE = {"id": 16, "hex": "#6A5CFF"}
     INDIGO = {"id": 15, "hex": "#493AC1"}
     PERIWINKLE = {"id": 16, "hex": "#6A5CFF"}
+    TURQUOISE = {"id": 15, "hex": "#493AC1"}
+    BLUEISH_PURPLE = {"id": 16, "hex": "#6A5CFF"}
     DARK_PURPLE = {"id": 18, "hex": "#811E9F"}
     PURPLE = {"id": 19, "hex": "#B44AC0"}
     DARK_PINK = {"id": 22, "hex": "#FF3881"}
     LIGHT_PINK = {"id": 22, "hex": "#FF3881"}
+    LIGHT_PINK = {"id": 23, "hex": "#FF99AA"}
+    DARK_BROWN = {"id": 24, "hex": "#6D482F"}
+    DARK_PINK = {"id": 22, "hex": "#FF3881"}
     LIGHT_PINK = {"id": 23, "hex": "#FF99AA"}
     DARK_BROWN = {"id": 24, "hex": "#6D482F"}
     BROWN = {"id": 25, "hex": "#9C6926"}
@@ -41,11 +48,6 @@ for color in Color:
 """
 Returns the color object based on the given rgb tuple
 """
-
-
-"""
-Returns the color object based on the given rgb tuple
-"""
 def get_matching_color(rgb) -> Color:
     for color in Color:
         if color.value["rgb"] == rgb:
@@ -54,6 +56,9 @@ def get_matching_color(rgb) -> Color:
     print("Color not found:", rgb)
     return None
 
+"""
+Returns the color object based on a given place color index
+"""
 """
 Returns the color object based on a given place color index
 """

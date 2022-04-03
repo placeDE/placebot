@@ -8,12 +8,18 @@ from color import get_color_from_index
 from local_configuration import local_configuration
 from placer import Placer
 from target_configuration.target_configuration_de import TargetConfigurationDE
+from target_configuration import target_configuration
+from color import get_color_from_index, Color
+
 
 PLACE_INTERVAL = 5 * 60  #  The interval that pixels can be placed at
 SLEEP_MISMATCH_THRESHOLD = 0.02  # The percentage of pixels mismatching that cause the bot to slow down (not stop) its refresh rate
 
 target_config = TargetConfigurationDE()
 board = BoardDE(target_config)
+
+PLACE_INTERVAL = 5 * 60  #  The interval that pixels can be placed at
+SLEEP_MISMATCH_THRESHOLD = 0.02  # The percentage of pixels mismatching that cause the bot to slow down (not stop) its refresh rate
 
 """
 Logs into all accounts in the local configuration file
@@ -59,14 +65,23 @@ def run_board_watcher_placer(placers):
 
             target_pixel, count = placer.board.get_mismatched_pixel()
 
+            # Get random mismatched target pixel
+            target_pixel = placer.board.get_mismatched_pixel(target_configuration.get_config()["pixels"])
+
             if target_pixel is None:
                 print("No mismatched pixels found")
                 was_completed = True
                 was_completed = True
-            continue
+                was_completed = True
+                continue
 
                 print(f"Mismatched pixel found ({count}/{(str(len(placer.board.target_configuration.get_pixels())))}): {str(target_pixel)}")
             placer.place_tile(target_pixel["x"], target_pixel["y"], get_color_from_index(target_pixel["color_index"]))
+            print("Mismatched pixel found (" + (str(last_mismatch_count)) + "/" + (str(len(target_configuration.get_config()["pixels"]))) + "): " + str(target_pixel))
+
+            # Place mismatched target pixel with correct color
+            placer.place_tile(target_pixel["x"], target_pixel["y"], get_color_from_index(target_pixel["color_index"]))
+            print()
 
             time.sleep(5)
 
@@ -81,6 +96,30 @@ def run_board_watcher_placer(placers):
             time.sleep(90)
 
         time.sleep(30)
+
+        # If we already completed the template and the mismatch is below threshold, it's time to go to sleep
+        if was_completed and last_mismatch_count < (SLEEP_MISMATCH_THRESHOLD * total_pixel_count):
+            print("\nLess than " + str(SLEEP_MISMATCH_THRESHOLD * total_pixel_count) + " mismatched pixels found, going to sleep, good night")
+            time.sleep(90)
+
+        time.sleep(30)
+
+# Run the entire thing
+def run_bot():
+    placers = login_all()
+    run_board_watcher_placer(placers)
+
+# run the bot in a loop in case it crashes due to any unforeseen reason, e.g. a websocket being closed by the server
+# (which happens exactly 1h after login probably due to some token being invalid)
+# I could just refresh that token, but I have a life, feel free to create a PR
+while True:
+    try:
+        run_bot()
+    except Exception as e:
+        print("\n\nError encountered while running bot: " + str(e))
+        print("\nRestarting...\n")
+        time.sleep(10)  # wait a bit in case the server lost connection
+
 
     time.sleep(5)
 # Run the entire thing
