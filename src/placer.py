@@ -119,6 +119,8 @@ class Placer:
 
         # canvas_id = math.floor(x / 1000)  # obtain the canvas id, each canvas is 1000x1000, there are currently 2 stacked next to each other
         canvas_id = self.board.get_canvas_id_from_coords(x, y)
+        real_x = x
+        real_y = y
 
         x = x % 1000  # we need to send relative to the canvas
         y = y % 1000  # we need to send relative to the canvas
@@ -140,9 +142,9 @@ class Placer:
 
         print(
             "Placing tile at "
-            + str(x)
+            + str(real_x)
             + ", "
-            + str(y + (canvas_id * 1000))
+            + str(real_y)
             + " with color "
             + str(color)
             + " on canvas "
