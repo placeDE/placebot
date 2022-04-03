@@ -1,5 +1,7 @@
 import random
+import sys
 import time
+import traceback
 
 from PIL import UnidentifiedImageError
 
@@ -59,10 +61,8 @@ def run_board_watcher_placer(placers):
                 print("ABORTING!!!!!!!!!!!!")
                 continue
 
-            target_pixel, count = placer.board.get_mismatched_pixel()
-
             # Get random mismatched target pixel
-            target_pixel, count = placer.board.get_mismatched_pixel(board.target_configuration.get_config()["pixels"])
+            target_pixel, count = placer.board.get_mismatched_pixel()
 
             if target_pixel is None:
                 print("No mismatched pixels found")
@@ -70,7 +70,7 @@ def run_board_watcher_placer(placers):
                 continue
 
             print("Mismatched pixel found (" + (str(last_mismatch_count)) + "/" + (
-                str(len(board.target_configuration.get_config()["pixels"]))) + "): " + str(target_pixel))
+                str(len(board.target_configuration.get_pixels()))) + "): " + str(target_pixel))
 
             # Place mismatched target pixel with correct color
             placer.place_tile(target_pixel["x"], target_pixel["y"], get_color_from_index(target_pixel["color_index"]))
@@ -105,7 +105,8 @@ while True:
     try:
         run_bot()
     except Exception as e:
-        print("\n\nError encountered while running bot: " + str(e))
+        print("\n\nError encountered while running bot: ")
+        traceback.print_exception(*sys.exc_info())
         print("\nRestarting...\n")
         time.sleep(10)  # wait a bit in case the server lost connection
 
