@@ -116,10 +116,12 @@ class Placer:
         self.password = password
 
     def place_tile(self, x: int, y: int, color: Color):
-        canvas_id = math.floor(
-            x / 1000
-        )  # obtain the canvas id, each canvas is 1000x1000, there are currently 2 stacked next to each other
+
+        # canvas_id = math.floor(x / 1000)  # obtain the canvas id, each canvas is 1000x1000, there are currently 2 stacked next to each other
+        canvas_id = self.board.get_canvas_id_from_coords(x, y)
+
         x = x % 1000  # we need to send relative to the canvas
+        y = y % 1000  # we need to send relative to the canvas
 
         self.last_placed = time.time()
 
@@ -265,7 +267,14 @@ class Placer:
                     img = BytesIO(requests.get(filename, stream=True).content)
 
                     # Tell the board to update with the offset of the current canvas
-                    self.board.update_image(img, 1000 * canvas_id, 0)
+                    if canvas_id == 0:
+                        self.board.update_image(img, 0, 0)
+                    if canvas_id == 1:
+                        self.board.update_image(img, 1000, 0)
+                    if canvas_id == 2:
+                        self.board.update_image(img, 0, 1000)
+                    if canvas_id == 3:
+                        self.board.update_image(img, 1000, 1000)
 
                     break
 
