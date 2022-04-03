@@ -7,7 +7,7 @@ from color import get_matching_color, Color
 from target_configuration.target_configuration_base import TargetConfigurationBase
 
 BOARD_SIZE_X = 2000
-BOARD_SIZE_Y = 1000
+BOARD_SIZE_Y = 2000
 
 
 class BoardBase:
