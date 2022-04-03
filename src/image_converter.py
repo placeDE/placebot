@@ -5,6 +5,7 @@ import sys
 from PIL import Image
 
 from color import get_closest_color
+from board import Board
 
 if len(sys.argv) < 4:
     print("Usage: python3 image_converter.py <input_image> <offset_x> <offset_y>")
@@ -17,6 +18,8 @@ image_filename = sys.argv[1]
 print("Reading image: " + image_filename)
 image = Image.open(image_filename)
 image_data = image.load()
+
+board = Board() # for util functionality
 
 print("Converting image...")
 target_pixels = []
@@ -42,7 +45,8 @@ for y in range(image.height):
             "color_index": closest_color.value["id"]
         })
 
-        target_canvas = math.floor((x + offset_x) / 1000)
+        # target_canvas = math.floor((x + offset_x) / 1000)
+        target_canvas = board.get_canvas_id_from_coords(x + offset_x, y + offset_y)
         if target_canvas not in canvases_enabled:
             canvases_enabled.append(target_canvas)
 

@@ -51,7 +51,7 @@ Returns the color object based on the given rgb tuple
 
 def get_matching_color(rgb) -> Color:
     if (color := rgb_to_color.get(rgb)) is None:
-        print("Color not found:", rgb)
+        # print("Color not found:", rgb)
         return None
     return color
 

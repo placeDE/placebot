@@ -12,7 +12,7 @@ from placer import Placer
 from target_configuration.target_configuration_de import TargetConfigurationDE
 
 PLACE_INTERVAL = 5 * 60  # The interval that pixels can be placed at
-SLEEP_MISMATCH_THRESHOLD = 0.02  # The percentage of pixels mismatching that cause the bot to slow down (not stop) its refresh rate
+SLEEP_MISMATCH_THRESHOLD = 0.005  # The percentage of pixels mismatching that cause the bot to slow down (not stop) its refresh rate
 
 target_config = TargetConfigurationDE()
 board = BoardDE(target_config)
@@ -47,7 +47,7 @@ def run_board_watcher_placer(placers):
 
     while True:
         for placer in placers:
-            if placer.last_placed + PLACE_INTERVAL + random.randrange(5, 25) > time.time():
+            if placer.last_placed + PLACE_INTERVAL + random.randrange(2, 15) > time.time():
                 # Triggered every PLACE_INTERVAL seconds, + random offset (5-25 seconds)
                 continue
 
@@ -74,7 +74,7 @@ def run_board_watcher_placer(placers):
 
             # Place mismatched target pixel with correct color
             placer.place_tile(target_pixel["x"], target_pixel["y"], get_color_from_index(target_pixel["color_index"]))
-            print()
+            print("%d out of %d pixels under control, %d mismatches" % (total_pixel_count - last_mismatch_count, total_pixel_count, last_mismatch_count))
 
             time.sleep(5)
 
@@ -108,6 +108,7 @@ while True:
         print("\n\nError encountered while running bot: ")
         traceback.print_exception(*sys.exc_info())
         print("\nRestarting...\n")
+        raise e
         time.sleep(10)  # wait a bit in case the server lost connection
 
     time.sleep(5)

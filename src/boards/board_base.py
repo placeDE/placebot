@@ -60,3 +60,14 @@ class BoardBase:
             if currentColor is None or currentColor.value["id"] != target_pixel["color_index"]:
                 mismatched_pixels.append(target_pixel)
         return mismatched_pixels
+
+    def get_canvas_id_from_coords(self, x, y):
+        if x < 1000 and y < 1000:
+            canvas_id = 0
+        if x >= 1000 and y < 1000:
+            canvas_id = 1
+        if x < 1000 and y >= 1000:
+            canvas_id = 2
+        if x >= 1000 and y >= 1000:
+            canvas_id = 3
+        return canvas_id
