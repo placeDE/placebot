@@ -36,13 +36,11 @@ class Color(Enum):
     GRAY = {"id": 29, "hex": "#898D90"}
     LIGHT_GRAY = {"id": 30, "hex": "#D4D7D9"}
     WHITE = {"id": 31, "hex": "#ffffff"}
-
-rgb_to_color = {}
     DARK_GREY = {"id": 28, "hex": "#515252"}
     GREY = {"id": 29, "hex": "#898D90"}
     LIGHT_GREY = {"id": 30, "hex": "#D4D7D9"}
-    WHITE = {"id": 31, "hex": "#FFFFFF"}
 
+rgb_to_color = {}
 # generate rgb values for all colors
 for color in Color:
     color.value["rgb"] = ImageColor.getcolor(color.value["hex"], "RGB")
