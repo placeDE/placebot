@@ -1,13 +1,10 @@
 import json
-import math
 import time
-from io import BytesIO
+import random
 
 import requests
 from bs4 import BeautifulSoup
-from websocket import create_connection
 
-from boards.board_base import BoardBase
 from color import Color
 
 # based on https://github.com/goatgoose/PlaceBot and https://github.com/rdeepak2002/reddit-place-script-2022/blob/073c13f6b303f89b4f961cdbcbd008d0b4437b39/main.py#L316
@@ -37,6 +34,7 @@ SET_PIXEL_QUERY = """mutation setPixel($input: ActInput!) {
       }
     }
     """
+PLACE_INTERVAL = 5*60
 
 
 class Placer:
@@ -57,7 +55,7 @@ class Placer:
         "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36",
     }
 
-    def __init__(self, board: BoardBase):
+    def __init__(self):
         self.password = None
         self.client = requests.session()
         self.client.headers.update(self.INITIAL_HEADERS)
@@ -65,7 +63,6 @@ class Placer:
         self.token = None
         self.logged_in = False
         self.last_placed = 0
-        self.board = board
 
         self.username = "Unknown"
 
@@ -115,9 +112,11 @@ class Placer:
         self.username = username
         self.password = password
 
+    def should_place(self) -> bool:
+        return self.last_placed == 0 or self.last_placed + PLACE_INTERVAL + random.randrange(2, 15) <= time.time()
+
     def place_tile(self, x: int, y: int, color: Color):
-        # canvas_id = math.floor(x / 1000)  # obtain the canvas id, each canvas is 1000x1000, there are currently 2 stacked next to each other
-        canvas_id = self.board.get_canvas_id_from_coords(x, y)
+        canvas_id = Placer.get_canvas_id_from_coords(x, y)
         real_x = x
         real_y = y
 
@@ -181,107 +180,6 @@ class Placer:
         else:
             print("Placed tile")
 
-    def update_board(self):
-        """
-        Fetch the current state of the board/canvas for the requed areas
-        """
-        if (
-            "canvases_enabled" in self.board.target_configuration.get_config()
-        ):  # the configuration can disable some canvases to reduce load
-            for canvas_id in self.board.target_configuration.get_config()[
-                "canvases_enabled"
-            ]:
-                self.update_canvas(canvas_id)
-        else:  # by default, use all (2 at the moment)
-            for canvas_id in [0, 1, 2, 3]:
-                self.update_canvas(canvas_id)
-
-    def update_canvas(self, canvas_id):
-        """
-        Connects a websocket and sends a request to the server for the current state of the board
-        Uses the returned URL to request the actual image using HTTP
-        :param canvas_id: the canvas to fetch
-        """
-        print("Getting board")
-        try:
-            ws = create_connection("wss://gql-realtime-2.reddit.com/query")
-            ws.send(
-                json.dumps(
-                    {
-                        "type": "connection_init",
-                        "payload": {"Authorization": "Bearer " + self.token},
-                    }
-                )
-            )
-            ws.recv()
-            ws.send(
-                json.dumps(
-                    {
-                        "id": "1",
-                        "type": "start",
-                        "payload": {
-                            "variables": {
-                                "input": {
-                                    "channel": {
-                                        "teamOwner": "AFD2022",
-                                        "category": "CONFIG",
-                                    }
-                                }
-                            },
-                            "extensions": {},
-                            "operationName": "configuration",
-                            "query": "subscription configuration($input: SubscribeInput!) {\n  subscribe(input: $input) {\n    id\n    ... on BasicMessage {\n      data {\n        __typename\n        ... on ConfigurationMessageData {\n          colorPalette {\n            colors {\n              hex\n              index\n              __typename\n            }\n            __typename\n          }\n          canvasConfigurations {\n            index\n            dx\n            dy\n            __typename\n          }\n          canvasWidth\n          canvasHeight\n          __typename\n        }\n      }\n      __typename\n    }\n    __typename\n  }\n}\n",
-                        },
-                    }
-                )
-            )
-            ws.recv()
-            ws.send(
-                json.dumps(
-                    {
-                        "id": "2",
-                        "type": "start",
-                        "payload": {
-                            "variables": {
-                                "input": {
-                                    "channel": {
-                                        "teamOwner": "AFD2022",
-                                        "category": "CANVAS",
-                                        "tag": str(canvas_id),
-                                    }
-                                }
-                            },
-                            "extensions": {},
-                            "operationName": "replace",
-                            "query": "subscription replace($input: SubscribeInput!) {\n  subscribe(input: $input) {\n    id\n    ... on BasicMessage {\n      data {\n        __typename\n        ... on FullFrameMessageData {\n          __typename\n          name\n          timestamp\n        }\n        ... on DiffFrameMessageData {\n          __typename\n          name\n          currentTimestamp\n          previousTimestamp\n        }\n      }\n      __typename\n    }\n    __typename\n  }\n}\n",
-                        },
-                    }
-                )
-            )
-
-            filename = ""
-            while True:
-                temp = json.loads(ws.recv())
-                if temp["type"] == "data":
-                    msg = temp["payload"]["data"]["subscribe"]
-                    if msg["data"]["__typename"] == "FullFrameMessageData":
-                        filename = msg["data"]["name"]
-
-                        print("Got image for canvas " + str(canvas_id) + ": " + filename)
-                        img = BytesIO(requests.get(filename, stream=True).content)
-
-                        # Tell the board to update with the offset of the current canvas
-                        if canvas_id == 0:
-                            self.board.update_image(img, 0, 0)
-                        if canvas_id == 1:
-                            self.board.update_image(img, 1000, 0)
-                        if canvas_id == 2:
-                            self.board.update_image(img, 0, 1000)
-                        if canvas_id == 3:
-                            self.board.update_image(img, 1000, 1000)
-
-                        break
-
-            ws.close()
-        except: # reddit may close the connection
-            pass
+    @staticmethod
+    def get_canvas_id_from_coords(x: int, y: int):
+        return int(x >= 1000) + int(y >= 1000) * 2
