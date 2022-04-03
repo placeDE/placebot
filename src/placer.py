@@ -257,5 +257,4 @@ class Placer:
 
                     break
 
-            ws.close()
         ws.close()
