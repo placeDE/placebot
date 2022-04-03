@@ -13,8 +13,7 @@ from color import Color
 # based on https://github.com/goatgoose/PlaceBot and https://github.com/rdeepak2002/reddit-place-script-2022/blob/073c13f6b303f89b4f961cdbcbd008d0b4437b39/main.py#L316
 
 
-SET_PIXEL_QUERY = \
-    """mutation setPixel($input: ActInput!) {
+SET_PIXEL_QUERY = """mutation setPixel($input: ActInput!) {
       act(input: $input) {
         data {
           ... on BasicMessage {
@@ -55,7 +54,7 @@ class Placer:
         "sec-fetch-dest": "empty",
         "sec-fetch-mode": "cors",
         "sec-fetch-site": "same-origin",
-        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36"
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36",
     }
 
     def __init__(self, board: BoardBase):
@@ -89,8 +88,8 @@ class Placer:
                 "username": username,
                 "password": password,
                 "dest": self.REDDIT_URL,
-                "csrf_token": csrf_token
-            }
+                "csrf_token": csrf_token,
+            },
         )
         time.sleep(1)
 
@@ -103,8 +102,11 @@ class Placer:
         # get the new access token
         print("Obtaining access token...")
         r = self.client.get(self.REDDIT_URL)
-        data_str = BeautifulSoup(r.content, features="html.parser").find("script", {"id": "data"}).contents[0][
-                   len("window.__r = "):-1]
+        data_str = (
+            BeautifulSoup(r.content, features="html.parser")
+            .find("script", {"id": "data"})
+            .contents[0][len("window.__r = ") : -1]
+        )
         data = json.loads(data_str)
         self.token = data["user"]["session"]["accessToken"]
 
@@ -114,30 +116,41 @@ class Placer:
         self.password = password
 
     def place_tile(self, x: int, y: int, color: Color):
-
-        # canvas_id = math.floor(
-            #x / 1000)  # obtain the canvas id, each canvas is 1000x1000, there are currently 2 stacked next to each other
+        # canvas_id = math.floor(x / 1000)  # obtain the canvas id, each canvas is 1000x1000, there are currently 2 stacked next to each other
         canvas_id = self.board.get_canvas_id_from_coords(x, y)
+        real_x = x
+        real_y = y
+
         x = x % 1000  # we need to send relative to the canvas
         y = y % 1000  # we need to send relative to the canvas
-        print("Target canvas: " + str(canvas_id) + " (" + str(x) + ", " + str(y) + ")")
 
+        print("Target canvas: " + str(canvas_id) + " (" + str(x) + ", " + str(y) + ")")
 
         self.last_placed = time.time()
 
         headers = self.INITIAL_HEADERS.copy()
-        headers.update({
-            "apollographql-client-name": "mona-lisa",
-            "apollographql-client-version": "0.0.1",
-            "content-type": "application/json",
-            "origin": "https://hot-potato.reddit.com",
-            "referer": "https://hot-potato.reddit.com/",
-            "sec-fetch-site": "same-site",
-            "authorization": "Bearer " + self.token
-        })
+        headers.update(
+            {
+                "apollographql-client-name": "mona-lisa",
+                "apollographql-client-version": "0.0.1",
+                "content-type": "application/json",
+                "origin": "https://hot-potato.reddit.com",
+                "referer": "https://hot-potato.reddit.com/",
+                "sec-fetch-site": "same-site",
+                "authorization": "Bearer " + self.token,
+            }
+        )
 
         print(
-            "Placing tile at " + str(x) + ", " + str(y + (canvas_id * 1000)) + " with color " + str(color) + " on canvas " + str(canvas_id))
+            "Placing tile at "
+            + str(real_x)
+            + ", "
+            + str(real_y)
+            + " with color "
+            + str(color)
+            + " on canvas "
+            + str(canvas_id)
+        )
         r = requests.post(
             "https://gql-realtime-2.reddit.com/query",
             json={
@@ -148,16 +161,13 @@ class Placer:
                         "PixelMessageData": {
                             "canvasIndex": canvas_id,
                             "colorIndex": color.value["id"],
-                            "coordinate": {
-                                "x": x,
-                                "y": y
-                            }
+                            "coordinate": {"x": x, "y": y},
                         },
-                        "actionName": "r/replace:set_pixel"
+                        "actionName": "r/replace:set_pixel",
                     }
-                }
+                },
             },
-            headers=headers
+            headers=headers,
         )
 
         if r.status_code != 200:
@@ -171,25 +181,27 @@ class Placer:
         else:
             print("Placed tile")
 
-    """
-    Fetch the current state of the board/canvas for the requed areas
-    """
-
     def update_board(self):
-        if "canvases_enabled" in self.board.target_configuration.get_config():  # the configuration can disable some canvases to reduce load
-            for canvas_id in self.board.target_configuration.get_config()["canvases_enabled"]:
+        """
+        Fetch the current state of the board/canvas for the requed areas
+        """
+        if (
+            "canvases_enabled" in self.board.target_configuration.get_config()
+        ):  # the configuration can disable some canvases to reduce load
+            for canvas_id in self.board.target_configuration.get_config()[
+                "canvases_enabled"
+            ]:
                 self.update_canvas(canvas_id)
         else:  # by default, use all (2 at the moment)
             for canvas_id in [0, 1, 2, 3]:
                 self.update_canvas(canvas_id)
 
-    """
-    Connects a websocket and sends a request to the server for the current state of the board
-    Uses the returned URL to request the actual image using HTTP
-    :param canvas_id: the canvas to fetch
-    """
-
     def update_canvas(self, canvas_id):
+        """
+        Connects a websocket and sends a request to the server for the current state of the board
+        Uses the returned URL to request the actual image using HTTP
+        :param canvas_id: the canvas to fetch
+        """
         print("Getting board")
         try:
             ws = create_connection("wss://gql-realtime-2.reddit.com/query")

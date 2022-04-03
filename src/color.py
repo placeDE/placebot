@@ -48,31 +48,21 @@ for color in Color:
     color.value["rgb"] = ImageColor.getcolor(color.value["hex"], "RGB")
     rgb_to_color.update({color.value["rgb"]: color})
 
-"""
-Returns the color object based on the given rgb tuple
-"""
-
 
 def get_matching_color(rgb) -> Color:
+    """
+    Returns the color object based on the given rgb tuple
+    """
     if (color := rgb_to_color.get(rgb)) is None:
         print("Color not found:", rgb)
         return None
     return color
 
 
-"""
-Returns the color object based on a given place color index
-"""
-"""
-Returns the color object based on a given place color index
-"""
-
-"""
-Returns the color object based on a given place color index
-"""
-
-
 def get_color_from_index(index) -> Color:
+    """
+    Returns the color object based on a given place color index
+    """
     for color in Color:
         if color.value["id"] == index:
             return color
@@ -91,11 +81,14 @@ def get_color_from_index(index) -> Color:
 #             closest_color = color
 #     return closest_color
 
-"""
-Get the closest color available on place to any color for converting any image to a template
-"""
-
 
 def get_closest_color(r, g, b) -> Color:
-    return min(list(Color), key=lambda color: (r - color.value["rgb"][0]) ** 2 + (g - color.value["rgb"][1]) ** 2 + (
-            b - color.value["rgb"][2]) ** 2)
+    """
+    Get the closest color available on place to any color for converting any image to a template
+    """
+    return min(
+        list(Color),
+        key=lambda color: (r - color.value["rgb"][0]) ** 2
+        + (g - color.value["rgb"][1]) ** 2
+        + (b - color.value["rgb"][2]) ** 2,
+    )
