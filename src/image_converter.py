@@ -19,6 +19,8 @@ print("Reading image: " + image_filename)
 image = Image.open(image_filename)
 image_data = image.load()
 
+board = Board() # for util functionality
+
 print("Converting image...")
 target_pixels = []
 canvases_enabled = []
@@ -44,7 +46,7 @@ for y in range(image.height):
         })
 
         # target_canvas = math.floor((x + offset_x) / 1000)
-        target_canvas = Board().get_canvas_id_from_coords(x, y)
+        target_canvas = board.get_canvas_id_from_coords(x + offset_x, y + offset_y)
         if target_canvas not in canvases_enabled:
             canvases_enabled.append(target_canvas)
 

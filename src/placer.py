@@ -116,7 +116,6 @@ class Placer:
         self.password = password
 
     def place_tile(self, x: int, y: int, color: Color):
-
         # canvas_id = math.floor(x / 1000)  # obtain the canvas id, each canvas is 1000x1000, there are currently 2 stacked next to each other
         canvas_id = self.board.get_canvas_id_from_coords(x, y)
         real_x = x
@@ -124,6 +123,8 @@ class Placer:
 
         x = x % 1000  # we need to send relative to the canvas
         y = y % 1000  # we need to send relative to the canvas
+
+        print("Target canvas: " + str(canvas_id) + " (" + str(x) + ", " + str(y) + ")")
 
         self.last_placed = time.time()
 
@@ -192,7 +193,7 @@ class Placer:
             ]:
                 self.update_canvas(canvas_id)
         else:  # by default, use all (2 at the moment)
-            for canvas_id in [0, 1]:
+            for canvas_id in [0, 1, 2, 3]:
                 self.update_canvas(canvas_id)
 
     def update_canvas(self, canvas_id):
