@@ -18,20 +18,10 @@ class Color(Enum):
     CYAN = {"id": 14, "hex": "#51E9F4"}
     INDIGO = {"id": 15, "hex": "#493AC1"}
     PERIWINKLE = {"id": 16, "hex": "#6A5CFF"}
-    TURQUOISE = {"id": 15, "hex": "#493AC1"}
-    BLUEISH_PURPLE = {"id": 16, "hex": "#6A5CFF"}
-    INDIGO = {"id": 15, "hex": "#493AC1"}
-    PERIWINKLE = {"id": 16, "hex": "#6A5CFF"}
-    TURQUOISE = {"id": 15, "hex": "#493AC1"}
-    BLUEISH_PURPLE = {"id": 16, "hex": "#6A5CFF"}
     DARK_PURPLE = {"id": 18, "hex": "#811E9F"}
     PURPLE = {"id": 19, "hex": "#B44AC0"}
     DARK_PINK = {"id": 22, "hex": "#FF3881"}
-    LIGHT_PINK = {"id": 22, "hex": "#FF3881"}
-    LIGHT_PINK = {"id": 23, "hex": "#FF99AA"}
-    DARK_BROWN = {"id": 24, "hex": "#6D482F"}
-    DARK_PINK = {"id": 22, "hex": "#FF3881"}
-    LIGHT_PINK = {"id": 23, "hex": "#FF99AA"}
+    LIGHT_PINK = {"id": 22, "hex": "#FF99AA"}
     DARK_BROWN = {"id": 24, "hex": "#6D482F"}
     BROWN = {"id": 25, "hex": "#9C6926"}
     BLACK = {"id": 27, "hex": "#000000"}
@@ -44,10 +34,11 @@ class Color(Enum):
 for color in Color:
     color.value["rgb"] = ImageColor.getcolor(color.value["hex"], "RGB")
 
-
 """
 Returns the color object based on the given rgb tuple
 """
+
+
 def get_matching_color(rgb) -> Color:
     for color in Color:
         if color.value["rgb"] == rgb:
@@ -56,6 +47,7 @@ def get_matching_color(rgb) -> Color:
     print("Color not found:", rgb)
     return None
 
+
 """
 Returns the color object based on a given place color index
 """
@@ -66,6 +58,8 @@ Returns the color object based on a given place color index
 """
 Returns the color object based on a given place color index
 """
+
+
 def get_color_from_index(index) -> Color:
     for color in Color:
         if color.value["id"] == index:
@@ -88,6 +82,8 @@ def get_color_from_index(index) -> Color:
 """
 Get the closest color available on place to any color for converting any image to a template
 """
+
+
 def get_closest_color(r, g, b) -> Color:
     return min(list(Color), key=lambda color: (r - color.value["rgb"][0]) ** 2 + (g - color.value["rgb"][1]) ** 2 + (
-                b - color.value["rgb"][2]) ** 2)
+            b - color.value["rgb"][2]) ** 2)

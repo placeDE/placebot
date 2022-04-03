@@ -7,7 +7,6 @@ from local_configuration import local_configuration
 
 UPDATE_INTERVAL = 60
 
-
 """
 Represents the target configuration containing the template / pixels to be drawn
 Is refreshed periodically by pulling it from a server 

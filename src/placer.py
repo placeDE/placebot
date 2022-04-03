@@ -1,12 +1,4 @@
 import json
-import json
-from io import BytesIO
-from typing import Type
-from websocket import create_connection
-from boards.board_base import BoardBase
-from boards.board_de import BoardDE
-import json
-import json
 import math
 import time
 from io import BytesIO
@@ -17,7 +9,6 @@ from websocket import create_connection
 
 from boards.board_base import BoardBase
 from color import Color
-from target_configuration import target_configuration
 
 # based on https://github.com/goatgoose/PlaceBot and https://github.com/rdeepak2002/reddit-place-script-2022/blob/073c13f6b303f89b4f961cdbcbd008d0b4437b39/main.py#L316
 
@@ -120,7 +111,8 @@ class Placer:
         self.logged_in = True
 
     def place_tile(self, x: int, y: int, color: Color):
-        canvas_id = math.floor(x / 1000)  # obtain the canvas id, each canvas is 1000x1000, there are currently 2 stacked next to each other
+        canvas_id = math.floor(
+            x / 1000)  # obtain the canvas id, each canvas is 1000x1000, there are currently 2 stacked next to each other
         x = x % 1000  # we need to send relative to the canvas
 
         self.last_placed = time.time()
@@ -167,13 +159,13 @@ class Placer:
         else:
             print("Placed tile")
 
-
     """
     Fetch the current state of the board/canvas for the requed areas
     """
+
     def update_board(self):
-        if "canvases_enabled" in target_configuration.get_config():  # the configuration can disable some canvases to reduce load
-            for canvas_id in target_configuration.get_config()["canvases_enabled"]:
+        if "canvases_enabled" in self.board.target_configuration.get_config():  # the configuration can disable some canvases to reduce load
+            for canvas_id in self.board.target_configuration.get_config()["canvases_enabled"]:
                 self.update_canvas(canvas_id)
         else:  # by default, use all (2 at the moment)
             for canvas_id in [0, 1]:
@@ -184,6 +176,7 @@ class Placer:
     Uses the returned URL to request the actual image using HTTP
     :param canvas_id: the canvas to fetch
     """
+
     def update_canvas(self, canvas_id):
         print("Getting board")
         try:
@@ -253,11 +246,11 @@ class Placer:
                         print("Got image for canvas " + str(canvas_id) + ": " + filename)
                         img = BytesIO(requests.get(filename, stream=True).content)
 
-                    # Tell the board to update with the offset of the current canvas
+                        # Tell the board to update with the offset of the current canvas
                         self.board.update_image(img, 1000 * canvas_id, 0)
 
                         break
 
             ws.close()
-        except: # connection may be closed without reason
+        except:  # connection may be closed without reason
             pass

@@ -1,12 +1,9 @@
 import json
 import math
-
-from PIL import Image
 import sys
 
 from PIL import Image
 
-from color import get_closest_color
 from color import get_closest_color
 
 if len(sys.argv) < 4:
@@ -59,6 +56,3 @@ with open("out.cfg", "w") as target_file:
     }, target_file)
 
 print("Done!")
-
-
-

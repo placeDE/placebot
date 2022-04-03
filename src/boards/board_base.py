@@ -9,6 +9,7 @@ from target_configuration.target_configuration_base import TargetConfigurationBa
 BOARD_SIZE_X = 2000
 BOARD_SIZE_Y = 1000
 
+
 class BoardBase:
     def __init__(self, target_configuration: TargetConfigurationBase):
         self.last_update = 0
@@ -31,10 +32,10 @@ class BoardBase:
         # convert to color indices
         for x in range(image.width):
             for y in range(image.height):
-                self.colors[x + offset_x][y]= get_matching_color(image_data[x, y])
+                self.colors[x + offset_x][y] = get_matching_color(image_data[x, y])
 
         print("Board updated.")
-    
+
     def get_pixel_color(self, x: int, y: int) -> Color:
         return self.colors[x][y]
 
@@ -59,7 +60,3 @@ class BoardBase:
             if currentColor is None or currentColor.value["id"] != target_pixel["color_index"]:
                 mismatched_pixels.append(target_pixel)
         return mismatched_pixels
-
-
-
-

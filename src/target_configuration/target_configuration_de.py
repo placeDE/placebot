@@ -13,15 +13,11 @@ UPDATE_INTERVAL = 60
 Represents the target configuration containing the template / pixels to be drawn
 Is refreshed periodically by pulling it from a server 
 """
-class TargetConfiguration:
-    def __init__(self):
-        self.last_update = 0
-        self.config = {}
-
 class TargetConfigurationDE(TargetConfigurationBase):
     """
     Get the config and refresh it first if necessary
     """
+
     def get_config(self):
         if self.last_update + UPDATE_INTERVAL < time.time():
             self.refresh_config()
@@ -32,7 +28,8 @@ class TargetConfigurationDE(TargetConfigurationBase):
         for s in self.config["structures"].values():
             prio = (priorities.get(str(s.get("priority"))) or 0) * random.randint(0, 100) / 100
             for p in s.get("pixels"):
-                lst.append({"x": p["x"], "y": p["y"], "color_index": p["color"], "priority": [prio, priorities.get(str(p.get("priority"))) or 0]})
+                lst.append({"x": p["x"], "y": p["y"], "color_index": p["color"],
+                            "priority": [prio, priorities.get(str(p.get("priority"))) or 0]})
         self.pixels = lst
 
         return self.config
