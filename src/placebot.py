@@ -79,7 +79,7 @@ def run_board_watcher_placer(placers):
                 # Triggered every PLACE_INTERVAL seconds, + random offset (5-25 seconds)
                 continue
 
-            print("Current time: " + datetime.datetime.now())
+            print(f"Current time: {datetime.datetime.now()}")
             print("Attempting to place for: " + placer.username)
 
             # Fetch the required canvases
