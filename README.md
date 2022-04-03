@@ -33,7 +33,7 @@ Based on code from https://github.com/goatgoose/PlaceBot and https://github.com/
 Clone the repostory:
 
 ```
-git clone https://github.com/Geosearchef/placebot.git
+https://github.com/TheCataliasTNT2k/placebot
 ```
 
 Create a virtual environment
