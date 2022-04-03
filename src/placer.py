@@ -131,7 +131,8 @@ class Placer:
             "authorization": "Bearer " + self.token
         })
 
-        print("Placing tile at " + str(x + (canvas_id * 1000)) + ", " + str(y) + " with color " + str(color) + " on canvas " + str(canvas_id))
+        print(
+            "Placing tile at " + str(x) + ", " + str(y + (canvas_id * 1000)) + " with color " + str(color) + " on canvas " + str(canvas_id))
         r = requests.post(
             "https://gql-realtime-2.reddit.com/query",
             json={
@@ -256,4 +257,5 @@ class Placer:
 
                     break
 
+            ws.close()
         ws.close()
