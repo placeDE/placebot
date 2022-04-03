@@ -38,6 +38,10 @@ class Color(Enum):
     WHITE = {"id": 31, "hex": "#ffffff"}
 
 rgb_to_color = {}
+    DARK_GREY = {"id": 28, "hex": "#515252"}
+    GREY = {"id": 29, "hex": "#898D90"}
+    LIGHT_GREY = {"id": 30, "hex": "#D4D7D9"}
+    WHITE = {"id": 31, "hex": "#FFFFFF"}
 
 # generate rgb values for all colors
 for color in Color:
