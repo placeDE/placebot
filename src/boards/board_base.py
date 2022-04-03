@@ -7,13 +7,15 @@ from color import get_matching_color, Color
 from target_configuration.target_configuration_base import TargetConfigurationBase
 
 BOARD_SIZE_X = 2000
-BOARD_SIZE_Y = 1000
+BOARD_SIZE_Y = 2000
 
 
 class BoardBase:
     def __init__(self, target_configuration: TargetConfigurationBase):
         self.last_update = 0
-        self.colors = []  # 2D array of the entire board (BOARD_SIZE_X x BOARD_SIZE_Y), Color objects
+        self.colors = (
+            []
+        )  # 2D array of the entire board (BOARD_SIZE_X x BOARD_SIZE_Y), Color objects
         self.target_configuration: TargetConfigurationBase = target_configuration
 
         # Fill with white preset
@@ -46,7 +48,9 @@ class BoardBase:
             return None
 
         # return random.choice(mismatched_pixels) # TODO: does this work?
-        return mismatched_pixels[min(random.randrange(0, 8), len(mismatched_pixels) - 1)]
+        return mismatched_pixels[
+            min(random.randrange(0, 8), len(mismatched_pixels) - 1)
+        ]
 
     def get_mismatched_pixels(self):
         mismatched_pixels = []
@@ -54,10 +58,18 @@ class BoardBase:
             currentColor = self.get_pixel_color(target_pixel["x"], target_pixel["y"])
 
             if currentColor is None:
-                print("Couldn't determine color for pixel at " + str(target_pixel["x"]) + ", " + str(target_pixel["y"]))
+                print(
+                    "Couldn't determine color for pixel at "
+                    + str(target_pixel["x"])
+                    + ", "
+                    + str(target_pixel["y"])
+                )
                 continue
 
-            if currentColor is None or currentColor.value["id"] != target_pixel["color_index"]:
+            if (
+                currentColor is None
+                or currentColor.value["id"] != target_pixel["color_index"]
+            ):
                 mismatched_pixels.append(target_pixel)
         return mismatched_pixels
 
