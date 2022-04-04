@@ -40,8 +40,10 @@ def run_websocket(placers: List[Placer]):
 
     try:
         while True:
+            request_sent = False
             for placer in placers:
                 if placer.should_place():
+                    request_sent = True
                     print("Requesting pixel placement for account: " + placer.username)
                     pixel = socket.request_pixel(placer)
                     print(pixel)
@@ -64,6 +66,8 @@ def run_websocket(placers: List[Placer]):
                         ]
                     ),
                 )
+            if not request_sent:
+                socket.ping()
             time.sleep(30)
     finally:
         socket.close()

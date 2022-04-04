@@ -19,6 +19,10 @@ class SocketConnection:
             operation="handshake"
         )))
 
+    def ping(self):
+        self.socket.send(json.dumps({"operation": "ping"}))
+        self.socket.recv()
+
     def request_pixel(self, placer):
         username = placer.username
 
