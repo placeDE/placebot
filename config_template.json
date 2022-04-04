@@ -9,5 +9,5 @@
             "password": "World"
         }
     ],
-    "target_configuration_url": "https://placede.github.io/pixel/pixel.json"
+    "server_url": "wss://placede.ml"
 }
