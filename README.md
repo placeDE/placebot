@@ -33,7 +33,7 @@ Based on code from https://github.com/goatgoose/PlaceBot and https://github.com/
 Clone the repostory:
 
 ```
-git clone https://github.com/TheCataliasTNT2k/placebot
+git clone https://github.com/placeDE/placebot
 ```
 
 Create a virtual environment
@@ -121,7 +121,7 @@ source .venv/bin/activate
 version: '2'
 services:
   placebot:
-    build: https://github.com/TheCataliasTNT2k/placebot.git#main
+    build: https://github.com/placeDE/placebot.git#main
     restart: unless-stopped
     volumes:
      - ./config.json:/app/config.json
@@ -132,7 +132,8 @@ services:
 3. Run `docker-compose up -d
 4. Profit.
 
-Source the environment (for bash):
+
+## Source the environment (for bash):
 
 ```
 source .venv/bin/activate
