@@ -68,7 +68,7 @@ def run_websocket(placers: List[Placer]):
                 )
             if not request_sent:
                 socket.ping()
-            time.sleep(30)
+            time.sleep(10)
     finally:
         socket.close()
 
