@@ -15,7 +15,7 @@ class SocketConnection:
     def send_intro(self, bot_count: int):
         self.socket.send(json.dumps(self.__wrap_data(
             "",
-            data={"accounts": bot_count},
+            data={"useraccounts": bot_count},
             operation="handshake"
         )))
 

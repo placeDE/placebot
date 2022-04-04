@@ -6,6 +6,7 @@ from typing import List
 from connection import SocketConnection
 from local_configuration import local_configuration
 from placer import Placer
+from concurrent.futures import ThreadPoolExecutor
 
 PLACE_INTERVAL = 5 * 60  # The interval that pixels can be placed at
 
@@ -15,15 +16,18 @@ def login_all():
     Logs into all accounts in the local configuration file
     """
     placers = []
-    for account in local_configuration["accounts"]:
+    def login(username: str, password: str):
         placer = Placer()
         placer.login(account["username"], account["password"])
 
         if not placer.logged_in:
             print("Failed to login to account: " + account["username"])
-            continue
-
+            return
         placers.append(placer)
+
+    with ThreadPoolExecutor(max_workers=6) as e:
+        for account in local_configuration["accounts"]:
+            e.submit(login, account["username"], account["password"])
 
     print("\n" + str(len(placers)) + " accounts logged in\n")
     return placers
@@ -31,7 +35,7 @@ def login_all():
 
 def run_websocket(placers: List[Placer]):
     socket = SocketConnection(local_configuration)
-    socket.connect()
+    socket.connect(len(placers))
 
     try:
         while True:
