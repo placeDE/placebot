@@ -5,8 +5,6 @@ import random
 import requests
 from bs4 import BeautifulSoup
 
-from color import Color
-
 # based on https://github.com/goatgoose/PlaceBot and https://github.com/rdeepak2002/reddit-place-script-2022/blob/073c13f6b303f89b4f961cdbcbd008d0b4437b39/main.py#L316
 
 
@@ -115,7 +113,7 @@ class Placer:
     def should_place(self) -> bool:
         return self.last_placed == 0 or self.last_placed + PLACE_INTERVAL + random.randrange(2, 15) <= time.time()
 
-    def place_tile(self, x: int, y: int, color: Color):
+    def place_tile(self, x: int, y: int, color: int):
         canvas_id = Placer.get_canvas_id_from_coords(x, y)
         real_x = x
         real_y = y
@@ -159,7 +157,7 @@ class Placer:
                     "input": {
                         "PixelMessageData": {
                             "canvasIndex": canvas_id,
-                            "colorIndex": color.value["id"],
+                            "colorIndex": color,
                             "coordinate": {"x": x, "y": y},
                         },
                         "actionName": "r/replace:set_pixel",

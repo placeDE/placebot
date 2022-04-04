@@ -1,16 +1,11 @@
-import datetime
-import random
 import sys
 import time
 import traceback
 from typing import List
 
-from PIL import UnidentifiedImageError
-
-from color import get_color_from_index
+from connection import SocketConnection
 from local_configuration import local_configuration
 from placer import Placer
-from connection import SocketConnection
 
 PLACE_INTERVAL = 5 * 60  # The interval that pixels can be placed at
 
@@ -35,7 +30,6 @@ def login_all():
 
 
 def run_websocket(placers: List[Placer]):
-
     socket = SocketConnection(local_configuration)
     socket.connect()
 
@@ -47,8 +41,7 @@ def run_websocket(placers: List[Placer]):
                     pixel = socket.request_pixel(placer)
                     print(pixel)
                     if pixel:
-                        placer.place_tile(pixel["x"], pixel["y"], get_color_from_index(pixel["color"]))
-
+                        placer.place_tile(pixel["x"], pixel["y"], pixel["color"])
                     else:
                         print("No pixel available!")
                         continue

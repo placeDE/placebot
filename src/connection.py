@@ -4,7 +4,6 @@ from websocket import WebSocket
 
 
 class SocketConnection:
-
     def __init__(self, config):
         self.config = config
         self.socket = WebSocket()
