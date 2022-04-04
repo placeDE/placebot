@@ -51,7 +51,7 @@ def run_websocket(placers: List[Placer]):
                         placer.place_tile(pixel["x"], pixel["y"], pixel["color"])
                     else:
                         print("No pixel available!")
-                        continue
+                        break
 
                 # Be nice and verbose so users don't look at nothing for 5 minutes
                 print(
