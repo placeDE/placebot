@@ -18,7 +18,7 @@ def login_all():
     placers = []
     def login(username: str, password: str):
         placer = Placer()
-        placer.login(account["username"], account["password"])
+        placer.login(username, password)
 
         if not placer.logged_in:
             print("Failed to login to account: " + account["username"])
@@ -27,6 +27,7 @@ def login_all():
 
     with ThreadPoolExecutor(max_workers=6) as e:
         for account in local_configuration["accounts"]:
+            time.sleep(0.01)
             e.submit(login, account["username"], account["password"])
 
     print("\n" + str(len(placers)) + " accounts logged in\n")
