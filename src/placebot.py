@@ -58,11 +58,10 @@ def run_websocket(placers: List[Placer]):
                     "ETA:   ",
                     ",  ".join(
                         [
-                            p.username
+                            placer.username
                             + " - "
-                            + str(round(p.last_placed + PLACE_INTERVAL + 15 - time.time()))
+                            + str(round(placer.last_placed + PLACE_INTERVAL + 15 - time.time()))
                             + " s"
-                            for p in placers
                         ]
                     ),
                 )
